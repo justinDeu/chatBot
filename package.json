@@ -1,0 +1,16 @@
+{
+  "name": "chatbot1",
+  "version": "1.0.0",
+ "engines": { "node": "8.9.3"},  "description": "My first chatbot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apiai": "^4.0.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
