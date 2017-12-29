@@ -64,4 +64,11 @@ function sendMessage(event) {
 	    }
 	  });
 	});
+
+  apiai.on('error', (error) => {
+    console.log(error);
+  });
+
+  apiai.end();
+
 }
