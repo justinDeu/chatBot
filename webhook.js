@@ -46,7 +46,18 @@ function sendMessage(event) {
 
   apiai.on('response', (response) => {
 
-  	let atiText = response.result.fulfillment.speech;
+  	switch (response.result.metadata.intentName) {
+  		case 'buildingAge':
+  			let responseText = "You want to know a building's age.";
+  			break;
+  		case 'welcome':
+  			let responseText = "Nice to meet you!";
+  			break;
+  		defualt: 
+  			let responseText = "I don't understand your message.";
+  	}
+
+//  	let atiText = response.result.fulfillment.speech;
 
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -54,7 +65,7 @@ function sendMessage(event) {
    	 	method: 'POST',
    	 	json: {
   	    	recipient: {id: sender},
-  	    	message: {text: atiText}
+  	    	message: {text: responseText}
       	}
 	}, function (error, response) {
 	    if (error) {
