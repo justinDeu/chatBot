@@ -4,7 +4,8 @@
  "engines": { "node": "8.9.3"},  "description": "My first chatbot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node webhook.js",
   },
   "author": "",
   "license": "ISC",
