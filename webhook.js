@@ -43,18 +43,18 @@ function sendMessage(event) {
   	sessionId: 'my_chat'
   });
 
-
+  var responseText;
   apiai.on('response', (response) => {
 
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
-  			let responseText = "You want to know a building's age.";
+  			responseText = "You want to know a building's age.";
   			break;
   		case 'welcome':
-  			let responseText = "Nice to meet you!";
+  			responseText = "Nice to meet you!";
   			break;
-  		defualt: 
-  			let responseText = "I don't understand your message.";
+  		default: 
+  			responseText = "I don't understand your message.";
   	}
 
 //  	let atiText = response.result.fulfillment.speech;
