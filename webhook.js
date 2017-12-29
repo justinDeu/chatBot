@@ -51,10 +51,10 @@ function sendMessage(event) {
   			responseText = "You want to know a building's age.";
   			break;
   		case 'welcome':
-  			responseText = "Nice to meet you!";
+  			responseText = response.result.fulfillment.speech;
   			break;
   		default: 
-  			responseText = "I don't understand your message.";
+  			responseText = response.result.fulfillment.speech;
   	}
 
 //  	let atiText = response.result.fulfillment.speech;
