@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const request = require('request');
+const apiaiApp = require('apiai')('00486919fdc14c738418d62ee543cbf5');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -37,20 +39,29 @@ app.post('/webhook', (req, res) => {
 function sendMessage(event) {
   let sender = event.sender.id;
   let text = event.message.text;
-
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token: 'EAAFjH7OUxG4BAI3O0EyaHubKQU455pf0wFUCZCjKIgChAy3KieZCk31ZBR96ZCZB7aNDkfcpuDjh3H9oBGYLY19rsGO6qh0RsdTlB8pfBcYhFTbAOmCYM54Iq2h55Suxg2jDyemdOCSyS5tXS0oZCYmG3rVHHixqXfLaEiv03ZA7VY18GwqJWAn'},
-    method: 'POST',
-    json: {
-      recipient: {id: sender},
-      message: {text: text}
-    }
-  }, function (error, response) {
-    if (error) {
-        console.log('Error sending message: ', error);
-    } else if (response.body.error) {
-        console.log('Error: ', response.body.error);
-    }
+  let apiai = apiaiApp.textRequest(text, {
+  	sessionId: 'my_chat'
   });
+
+
+  apiai.on('response' (response) => {
+
+  	let atiText = response.result.fulfillment.speech;
+
+	request({
+		url: 'https://graph.facebook.com/v2.6/me/messages',
+   	 	qs: {access_token: 'EAAFjH7OUxG4BAI3O0EyaHubKQU455pf0wFUCZCjKIgChAy3KieZCk31ZBR96ZCZB7aNDkfcpuDjh3H9oBGYLY19rsGO6qh0RsdTlB8pfBcYhFTbAOmCYM54Iq2h55Suxg2jDyemdOCSyS5tXS0oZCYmG3rVHHixqXfLaEiv03ZA7VY18GwqJWAn'},
+   	 	method: 'POST',
+   	 	json: {
+  	    	recipient: {id: sender},
+  	    	message: {text: atiText}
+      	}
+	}, function (error, response) {
+	    if (error) {
+	        console.log('Error sending message: ', error);
+	    } else if (response.body.error) {
+	        console.log('Error: ', response.body.error);
+	    }
+	  });
+	});
 }
