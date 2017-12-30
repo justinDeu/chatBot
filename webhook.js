@@ -59,6 +59,8 @@ function sendMessage(event) {
   			client.query('SELECT building_data FROM buildings', (err, res) => {
   				if (err) throw err;
   				let desiredBuilding = res.row[0];
+
+  				client.end();
   			})
   			responseText = "I found: " + desiredBuilding.name;
   			break;
