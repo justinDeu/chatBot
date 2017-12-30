@@ -52,13 +52,15 @@ function sendMessage(event) {
   var responseText;
   apiai.on('response', (response) => {
 
+  	console.log(response);
+
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
   			client.connect();
 
   			client.query('SELECT building_data FROM buildings', (err, res) => {
   				if (err) throw err;
-  				let desiredBuilding = res.row[0];
+  				let desiredBuilding = "got here";
 
   				client.end();
   			});
