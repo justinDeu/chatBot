@@ -61,7 +61,7 @@ function sendMessage(event) {
 
   			client.connect();
 
-  			client.query(`SELECT building_data FROM buildings WHERE building_id = ${building_id}`, (err, res) => {
+  			client.query(`SELECT building_data FROM buildings WHERE building_id = ${building_id};`, (err, res) => {
   				if (err) throw err;
   				let desiredBuilding = "got here";
 
