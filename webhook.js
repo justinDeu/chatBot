@@ -3,6 +3,12 @@ const bodyParser = require('body-parser');
 const app = express();
 const request = require('request');
 const apiaiApp = require('apiai')('00486919fdc14c738418d62ee543cbf5');
+const { Client } = require('pg');
+
+const client = new Client({
+	connectionString: process.env.DATABASE_URL,
+	ssl: true,
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,9 +54,15 @@ function sendMessage(event) {
 
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
-  			responseText = "You want to know a building's age.";
+  			client.connect();
+
+  			client.query('SELECT building_data FROM buildings', (err, res) => {
+  				if (err) throw err;
+  				let desiredBuilding = res.row[0];
+  			}
+  			responseText = "I found: " + desiredBuilding.name;
   			break;
-  		case 'welcome':
+  		case 'welcome':gi
   			responseText = response.result.fulfillment.speech;
   			break;
   		default: 
