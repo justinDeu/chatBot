@@ -57,13 +57,15 @@ function sendMessage(event) {
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
 
+  			var desiredBuilding = "not found";
+
   			let building_id = response.result.parameters.vt_building;
 
   			client.connect();
 
   			client.query(`SELECT building_data FROM buildings WHERE building_id = '${building_id}';`, (err, res) => {
   				if (err) throw err;
-  				let desiredBuilding = "got here";
+  				desiredBuilding = "got here";
 
   				client.end();
   			});
