@@ -61,10 +61,10 @@ function sendMessage(event) {
   				let desiredBuilding = res.row[0];
 
   				client.end();
-  			})
+  			});
   			responseText = "I found: " + desiredBuilding.name;
   			break;
-  		case 'welcome':gi
+  		case 'welcome':
   			responseText = response.result.fulfillment.speech;
   			break;
   		default: 
