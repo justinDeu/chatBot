@@ -56,14 +56,16 @@ function sendMessage(event) {
 
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
+  			let text = 'SELECT building_data FROM buildings WHERE building_id = $1;';
+  			let building_id = response.result.parameters.vt_building;
 
   			var desiredBuilding = "not found";
 
-  			let building_id = response.result.parameters.vt_building;
-
+  			console.log('building_id: ' + building_id)
+  			
   			client.connect();
 
-  			client.query(`SELECT building_data FROM buildings WHERE building_id = '${building_id}';`, (err, res) => {
+  			client.query(text, building_id, (err, res) => {
   				if (err) throw err;
   				desiredBuilding = "got here";
 
@@ -71,9 +73,11 @@ function sendMessage(event) {
   			});
   			responseText = "I found: " + desiredBuilding;
   			break;
+
   		case 'welcome':
   			responseText = response.result.fulfillment.speech;
   			break;
+
   		default: 
   			responseText = response.result.fulfillment.speech;
   	}
