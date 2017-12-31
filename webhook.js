@@ -56,7 +56,7 @@ function sendMessage(event) {
 
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
-  			let text = 'SELECT building_data FROM buildings WHERE building_id = $1';
+  			let text = "SELECT building_data FROM buildings WHERE building_id = '$1'";
   			let building_id = [response.result.parameters.vt_building];
 
   			//var desiredBuilding = "not found";
