@@ -16,7 +16,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 });
 
 /* Connecting to the MongoDB database for information */
-mongoose.connect('mongodb://AppReading:VT2021@git ads135537.mlab.com:35537/vt_information')
+mongoose.connect('mongodb://AppReading:VT2021@ds135537.mlab.com:35537/vt_information')
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {console.log('Connected to the MongoDB database!')});
