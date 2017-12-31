@@ -71,8 +71,8 @@ function sendMessage(event) {
 
   			client.query(text, building_id, (err, res) => {
   				if (err) throw err;
-  				desiredBuilding = "got here";
-  				console.log(res);
+  				
+  				console.log(res.rows[0]);
 
   				client.end();
   			});
