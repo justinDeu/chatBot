@@ -1,22 +1,25 @@
+/* The necessary modules to function being declard */
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const request = require('request');
 const apiaiApp = require('apiai')('00486919fdc14c738418d62ee543cbf5');
-const { Client } = require('pg');
+const mongoose = require('mongoose');
 
-
-const client = new Client({
-	connectionString: process.env.DATABASE_URL,
-	ssl: true,
-});
-
+/* Telling the express app to use bodyparser to handle JSON */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+/* Setting the server to listen on the environment's port or default to 3000 */
 const server = app.listen(process.env.PORT || 3000, () => {
   console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
+
+/* Connecting to the MongoDB database for information */
+mongoose.connect('mongodb://AppReading:VT2021@ds135537.mlab.com:35537/vt_information')
+var db = mongoose.connection;
+db.on('error', console.error.bing(console, 'connection error:'));
+db.once('open', () => {console.log('Connected to the MongoDB database!')});
 
 /* For Facebook Validation */
 app.get('/webhook', (req, res) => {
@@ -42,41 +45,29 @@ app.post('/webhook', (req, res) => {
   }
 });
 
-/* Echoes the message back */
+/* Echoes the message back gathering the sender and text from the event passed in*/
 function sendMessage(event) {
   let sender = event.sender.id;
   let text = event.message.text;
+
+  /* Passing the text of the event to apiai to analyze what is required */
   let apiai = apiaiApp.textRequest(text, {
   	sessionId: 'my_chat'
   });
 
-  var responseText;
+  var responseText; // the variable that will hold the text to send back
+
+
   apiai.on('response', (response) => {
 
   	console.log(response);
 
+  	/* Creating the response based off the intentName in the JSON */
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
-  			let text = "SELECT building_data FROM buildings WHERE building_id = '$1'";
-  			let building_id = [response.result.parameters.vt_building];
+  			
+  			let building_id = response.result.parameters.vt_building;
 
-  			/*console.log('building_id: ' + building_id);
-
-  			client.connect();
-
-  			let result = client.query(text, building_id);
-
-  			client.end();
-
-  			let desiredBuilding = result.rows[0];*/
-
-  			client.query(text, building_id, (err, res) => {
-  				if (err) throw err;
-  				
-  				console.log(res.rows[0]);
-
-  				client.end();
-  			});
   			responseText = "I'm struggling.";
   			break;
 
@@ -88,8 +79,7 @@ function sendMessage(event) {
   			responseText = response.result.fulfillment.speech;
   	}
 
-//  	let atiText = response.result.fulfillment.speech;
-
+  	/* Sending the message back to facebook with the produced response */
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
    	 	qs: {access_token: 'EAAFjH7OUxG4BAI3O0EyaHubKQU455pf0wFUCZCjKIgChAy3KieZCk31ZBR96ZCZB7aNDkfcpuDjh3H9oBGYLY19rsGO6qh0RsdTlB8pfBcYhFTbAOmCYM54Iq2h55Suxg2jDyemdOCSyS5tXS0oZCYmG3rVHHixqXfLaEiv03ZA7VY18GwqJWAn'},
