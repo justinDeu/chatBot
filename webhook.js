@@ -59,9 +59,7 @@ function sendMessage(event) {
   			let text = "SELECT building_data FROM buildings WHERE building_id = '$1'";
   			let building_id = [response.result.parameters.vt_building];
 
-  			//var desiredBuilding = "not found";
-
-  			console.log('building_id: ' + building_id);
+  			/*console.log('building_id: ' + building_id);
 
   			client.connect();
 
@@ -69,16 +67,16 @@ function sendMessage(event) {
 
   			client.end();
 
-  			let desiredBuilding = result.rows[0];
+  			let desiredBuilding = result.rows[0];*/
 
-  			/*client.query(text, building_id, (err, res) => {
+  			client.query(text, building_id, (err, res) => {
   				if (err) throw err;
   				desiredBuilding = "got here";
-  				console.log("desiredBuilding set");
+  				console.log(res);
 
   				client.end();
-  			});*/
-  			responseText = "I found: " + desiredBuilding.name;
+  			});
+  			responseText = "I'm struggling.";
   			break;
 
   		case 'welcome':
