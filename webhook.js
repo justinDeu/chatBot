@@ -79,9 +79,19 @@ function sendMessage(event) {
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
   			
-  			let building_id = response.result.parameters.vt_building;
+  			let requested_id = response.result.parameters.vt_building;
 
-  			responseText = "I'm struggling.";
+  			db.collection("buildings").findOne({building_id: requested_id}, function(err, res) {
+  				if (err) {
+  					console.log(err);
+  				} else {
+  					responseText = "I found: " + res.building_name;
+  				}
+  			});
+
+  			if (typeof responseText === "undefined") {
+  				responseText = "Failed to find building."
+  			}
   			break;
 
   		case 'welcome':
