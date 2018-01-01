@@ -6,6 +6,10 @@ const request = require('request');
 const apiaiApp = require('apiai')('00486919fdc14c738418d62ee543cbf5');
 const MongoClient = require('mongodb').MongoClient;
 
+
+// Temporarily declaring global var db for the mongo database 
+var db;
+
 /* Telling the express app to use bodyparser to handle JSON */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,7 +32,7 @@ MongoClient.connect(url, function(err, client) {
 		console.log('Successfully connected to the MongoDb database!');
 	}
 
-	const db = client.db(dbName);
+	db = client.db(dbName);
 });
 
 
