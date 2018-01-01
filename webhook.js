@@ -10,10 +10,12 @@ const MongoClient = require('mongodb').MongoClient;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
 /* Setting the server to listen on the environment's port or default to 3000 */
 const server = app.listen(process.env.PORT || 3000, () => {
   console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
+
 
 /* Connecting to the MongoDB database for information */
 const url = 'mongodb://AppReading:VT2021@ds135537.mlab.com:35537/vt_information';
@@ -25,9 +27,10 @@ MongoClient.connect(url, function(err, client) {
 	} else {
 		console.log('Successfully connected to the MongoDb database!');
 	}
+
+	const db = client.db(dbName);
 });
 
-const db = client.db(dbName);
 
 /* For Facebook Validation */
 app.get('/webhook', (req, res) => {
@@ -37,6 +40,7 @@ app.get('/webhook', (req, res) => {
     res.status(403).end();
   }
 });
+
 
 /* Handling all messenges */
 app.post('/webhook', (req, res) => {
@@ -52,6 +56,7 @@ app.post('/webhook', (req, res) => {
     res.status(200).end();
   }
 });
+
 
 /* Echoes the message back gathering the sender and text from the event passed in*/
 function sendMessage(event) {
