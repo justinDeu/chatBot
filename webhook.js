@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const request = require('request');
 const apiaiApp = require('apiai')('00486919fdc14c738418d62ee543cbf5');
+const MongoClient = require('mongodb').MongoClient;
 
 /* Telling the express app to use bodyparser to handle JSON */
 app.use(bodyParser.json());
