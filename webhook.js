@@ -23,7 +23,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 
 /* Connecting to the MongoDB database for information */
-const url = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DBNAME}`;
+const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DBNAME}`;
 const dbName = process.env.MONGO_DBNAME;
 
 MongoClient.connect(url, function(err, client) {
