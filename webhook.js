@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const request = require('request');
 const apiaiApp = require('apiai')('00486919fdc14c738418d62ee543cbf5');
-const mongoose = require('mongoose');
 
 /* Telling the express app to use bodyparser to handle JSON */
 app.use(bodyParser.json());
@@ -16,10 +15,18 @@ const server = app.listen(process.env.PORT || 3000, () => {
 });
 
 /* Connecting to the MongoDB database for information */
-mongoose.connect('mongodb://AppReading:VT2021@ds135537.mlab.com:35537/vt_information')
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {console.log('Connected to the MongoDB database!')});
+const url = 'mongodb://AppReading:VT2021@ds135537.mlab.com:35537/vt_information';
+const dbName = 'vt_information';
+
+MongoClient.connect(url, function(err, client) {
+	if (err) {
+		console.log(err);
+	} else {
+		console.log('mongodb://<dbuser>:<dbpassword>@ds135537.mlab.com:35537/vt_informationSuccessfully connected to MongoDb');
+	}
+});
+
+const db = client.db(dbName);
 
 /* For Facebook Validation */
 app.get('/webhook', (req, res) => {
