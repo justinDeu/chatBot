@@ -1,9 +1,10 @@
 /* The necessary modules to function being declard */
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const request = require('request');
-const apiaiApp = require('apiai')('00486919fdc14c738418d62ee543cbf5');
+const apiaiApp = require('apiai')(process.env.APIAI_KEY);
 const MongoClient = require('mongodb').MongoClient;
 
 
@@ -22,8 +23,8 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 
 /* Connecting to the MongoDB database for information */
-const url = 'mongodb://AppReading:VT2021@ds135537.mlab.com:35537/vt_information';
-const dbName = 'vt_information';
+const url = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DBNAME}`;
+const dbName = process.env.MONGO_DBNAME;
 
 MongoClient.connect(url, function(err, client) {
 	if (err) {
