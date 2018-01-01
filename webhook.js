@@ -34,6 +34,14 @@ MongoClient.connect(url, function(err, client) {
 	}
 
 	db = client.db(dbName);
+
+	const buildings = db.collection('buildings');
+	buildings.findOne({buidling_id: 'TORG'}, (err, res) => {
+		console.log('Found the following: ');
+		console.log(res);
+	});
+
+	client.close();
 });
 
 
