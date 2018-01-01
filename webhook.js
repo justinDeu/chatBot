@@ -22,7 +22,7 @@ MongoClient.connect(url, function(err, client) {
 	if (err) {
 		console.log(err);
 	} else {
-		console.log('mongodb://<dbuser>:<dbpassword>@ds135537.mlab.com:35537/vt_informationSuccessfully connected to MongoDb');
+		console.log('Successfully connected to the MongoDb database!');
 	}
 });
 
