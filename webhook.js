@@ -152,25 +152,25 @@ function sendMessage(event) {
 	database to find and return the desired building */
 async function buildingQuery(requested_id) {
 	MongoClient.connect(url, function(err, client) {
-	if (err) {
-		console.log(err);
-	} else {
-		console.log('Successfully connected to the MongoDb database for query of: ' + requested_id);
-	}
+		if (err) {
+			console.log(err);
+		} else {
+			console.log('Successfully connected to the MongoDb database for query of: ' + requested_id);
+		}
 
-	db = client.db(dbName);
+		db = client.db(dbName);
 
-	const buildings = db.collection('buildings');
+		const buildings = db.collection('buildings');
 
-	var response
-	try {
-		response = await buildings.findOne({building_id: requested_id});
-	} catch (err) {
-		console.log(err);
-	}
+		var response;
+		try {
+			response = await buildings.findOne({building_id: requested_id});
+		} catch (err) {
+			console.log(err);
+		}
 
-	client.close();
+		client.close();
 
-	console.log(response);
-});
+		console.log(response);
+	});
 }
