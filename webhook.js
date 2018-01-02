@@ -155,17 +155,22 @@ function buildingQuery(requested_id) {
 	if (err) {
 		console.log(err);
 	} else {
-		console.log('Successfully connected to the MongoDb database!');
+		console.log('Successfully connected to the MongoDb database for query of: ' + requested_id);
 	}
 
 	db = client.db(dbName);
 
 	const buildings = db.collection('buildings');
-	buildings.findOne({building_id: requested_id}, (err, res) => {
-		console.log('Found the following: ');
-		console.log(res);
-	});
+
+	var response;
+	try {
+		response = await buildings.findOne({building_id: requested_id});
+	} catch (err) {
+		console.log(err);
+	}
 
 	client.close();
+
+	console.log(response);
 });
 }
