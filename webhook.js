@@ -26,7 +26,14 @@ const server = app.listen(process.env.PORT || 3000, () => {
 const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DBNAME}`;
 const dbName = process.env.MONGO_DBNAME;
 
-MongoClient.connect(url, function(err, client) {
+console.log('First Call:');
+buildingQuery();
+
+console.log('');
+console.log('Second Call:');
+buildingQuery();
+
+/*MongoClient.connect(url, function(err, client) {
 	if (err) {
 		console.log(err);
 	} else {
@@ -42,7 +49,7 @@ MongoClient.connect(url, function(err, client) {
 	});
 
 	client.close();
-});
+});*/
 
 
 /* For Facebook Validation */
@@ -139,4 +146,26 @@ function sendMessage(event) {
 
   apiai.end();
 
+}
+
+/* Connects to the MongoDB and queries the builidings
+	database to find and return the desired building */
+function buildingQuery() {
+	MongoClient.connect(url, function(err, client) {
+	if (err) {
+		console.log(err);
+	} else {
+		console.log('Successfully connected to the MongoDb database!');
+	}
+
+	db = client.db(dbName);
+
+	const buildings = db.collection('buildings');
+	buildings.findOne({building_id: 'TORG'}, (err, res) => {
+		console.log('Found the following: ');
+		console.log(res);
+	});
+
+	client.close();
+});
 }
