@@ -150,7 +150,7 @@ function sendMessage(event) {
 
 /* Connects to the MongoDB and queries the builidings
 	database to find and return the desired building */
-function buildingQuery(requested_id) {
+async function buildingQuery(requested_id) {
 	MongoClient.connect(url, function(err, client) {
 	if (err) {
 		console.log(err);
@@ -162,7 +162,7 @@ function buildingQuery(requested_id) {
 
 	const buildings = db.collection('buildings');
 
-	var response;
+	var response
 	try {
 		response = await buildings.findOne({building_id: requested_id});
 	} catch (err) {
