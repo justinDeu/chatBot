@@ -36,7 +36,7 @@ MongoClient.connect(url, function(err, client) {
 	db = client.db(dbName);
 
 	const buildings = db.collection('buildings');
-	buildings.find({}).toArray((err, res) => {
+	buildings.find({building_id: 'TORG'}).toArray((err, res) => {
 		console.log('Found the following: ');
 		console.log(res);
 	});
