@@ -154,7 +154,7 @@ async function buildingQuery(requested_id) {
 	
 
 	try {
-		await MongoClient.connect(url);
+		const client = await MongoClient.connect(url);
 		const db = client.db(dbName);
 		const buildings = db.collection('buildings');
 		const response = (await buildings.findOne({building_id: requested_id}));
