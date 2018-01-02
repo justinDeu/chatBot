@@ -27,11 +27,11 @@ const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWOR
 const dbName = process.env.MONGO_DBNAME;
 
 console.log('First Call:');
-buildingQuery();
+buildingQuery('TORG');
 
 console.log('');
 console.log('Second Call:');
-buildingQuery();
+buildingQuery('NCB');
 
 /*MongoClient.connect(url, function(err, client) {
 	if (err) {
@@ -150,7 +150,7 @@ function sendMessage(event) {
 
 /* Connects to the MongoDB and queries the builidings
 	database to find and return the desired building */
-function buildingQuery() {
+function buildingQuery(requested_id) {
 	MongoClient.connect(url, function(err, client) {
 	if (err) {
 		console.log(err);
@@ -161,7 +161,7 @@ function buildingQuery() {
 	db = client.db(dbName);
 
 	const buildings = db.collection('buildings');
-	buildings.findOne({building_id: 'TORG'}, (err, res) => {
+	buildings.findOne({building_id: requested_id}, (err, res) => {
 		console.log('Found the following: ');
 		console.log(res);
 	});
