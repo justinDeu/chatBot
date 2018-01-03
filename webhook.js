@@ -81,7 +81,7 @@ function sendMessage(event) {
             console.log(queryResult);
             console.log('');
 
-            responseText = `Found: ${queryResult.building_name}`;
+            responseText = `Construction of ${queryResult.building_name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)}`;
 
             console.log('ResponseText:');
             console.log(responseText);
@@ -130,6 +130,7 @@ function sendMessage(event) {
 	database to find and return the desired building
 
 	 params: requested_id   the identifier of the desired building
+	 returns: the object that the query finds
 	 */
 async function buildingQuery(requested_id) {
 	try {
@@ -145,4 +146,23 @@ async function buildingQuery(requested_id) {
 	} catch (err) {
 		console.log(err);
 	}
+}
+
+/*
+    Calculates the age of something in years based of the given year
+    Returns -1 if the calculation is not correct and the
+    builiding age is negative
+
+    params: startYear   the year it was started
+    return: the age in years
+ */
+function ageInYears(startYear) {
+    const currentYear = new Date().getFullYear();
+
+    if (!Number.isInteger(startYear) || startYear > currentYear) {
+        return -1;
+    } else {
+        return currentYear - startYear;
+    }
+
 }
