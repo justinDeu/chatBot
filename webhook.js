@@ -66,7 +66,7 @@ function sendMessage(event) {
   var responseText; // the variable that will hold the text to send back
 
 
-  apiai.on('response', (response) => {
+  apiai.on('response', async (response) => {
 
   	/* Creating the response based off the intentName in the JSON */
   	switch (response.result.metadata.intentName) {
@@ -75,7 +75,7 @@ function sendMessage(event) {
   			let requested_id = response.result.parameters.vt_building;
 
   			// Calling the query to find the building and return that object from the database
-            let queryResult = buildingQuery(requested_id);
+            let queryResult = await buildingQuery(requested_id);
 
             console.log('QueryResult:');
             console.log(queryResult);
@@ -132,13 +132,11 @@ function sendMessage(event) {
 	 params: requested_id   the identifier of the desired building
 	 */
 async function buildingQuery(requested_id) {
-	
-
 	try {
 		const client = await MongoClient.connect(url);
 		const db = client.db(dbName);
 		const buildings = db.collection('buildings');
-		const response = (await buildings.findOne({building_id: requested_id}));
+		const response = await buildings.findOne({building_id: requested_id});
 		client.close();
 		console.log('Query Response:');
 		console.log(response);
