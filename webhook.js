@@ -77,19 +77,12 @@ function sendMessage(event) {
   			// Calling the query to find the building and return that object from the database
             let queryResult = await buildingQuery(requested_id);
 
-            console.log('QueryResult:');
-            console.log(queryResult);
-            console.log('');
-
-            responseText = `Construction of ${queryResult.building_name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)}`;
-
-            console.log('ResponseText:');
-            console.log(responseText);
-            console.log('');
-
-  			if (typeof responseText === "undefined") {
-  				responseText = "Failed to find building."
-  			}
+            if (queryResult) {
+                responseText = `Construction of ${queryResult.building_name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
+            } else {
+                responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
+            }
+            
   			break;
 
   		case 'welcome':
@@ -139,9 +132,6 @@ async function buildingQuery(requested_id) {
 		const buildings = db.collection('buildings');
 		const response = await buildings.findOne({building_id: requested_id});
 		client.close();
-		console.log('Query Response:');
-		console.log(response);
-		console.log('');
 		return response;
 	} catch (err) {
 		console.log(err);
