@@ -26,31 +26,6 @@ const server = app.listen(process.env.PORT || 3000, () => {
 const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DBNAME}`;
 const dbName = process.env.MONGO_DBNAME;
 
-console.log('First Call:');
-buildingQuery('TORG');
-
-console.log('');
-console.log('Second Call:');
-buildingQuery('NCB');
-
-/*MongoClient.connect(url, function(err, client) {
-	if (err) {
-		console.log(err);
-	} else {
-		console.log('Successfully connected to the MongoDb database!');
-	}
-
-	db = client.db(dbName);
-
-	const buildings = db.collection('buildings');
-	buildings.findOne({building_id: 'TORG'}, (err, res) => {
-		console.log('Found the following: ');
-		console.log(res);
-	});
-
-	client.close();
-});*/
-
 
 /* For Facebook Validation */
 app.get('/webhook', (req, res) => {
@@ -101,13 +76,10 @@ function sendMessage(event) {
   			
   			let requested_id = response.result.parameters.vt_building;
 
-  			db.collection("buildings").findOne({building_id: requested_id}, function(err, res) {
-  				if (err) {
-  					console.log(err);
-  				} else {
-  					responseText = "I found: " + res.building_name;
-  				}
-  			});
+  			// Calling the query to find the building and return that object from the database
+            var queryResult = buildingQuery(requested_id);
+
+            responseText = `Found: ${queryResult.building_name}`;
 
   			if (typeof responseText === "undefined") {
   				responseText = "Failed to find building."
@@ -149,7 +121,10 @@ function sendMessage(event) {
 }
 
 /* Connects to the MongoDB and queries the builidings
-	database to find and return the desired building */
+	database to find and return the desired building
+
+	 params: requested_id   the identifier of the desired building
+	 */
 async function buildingQuery(requested_id) {
 	
 
@@ -158,8 +133,8 @@ async function buildingQuery(requested_id) {
 		const db = client.db(dbName);
 		const buildings = db.collection('buildings');
 		const response = (await buildings.findOne({building_id: requested_id}));
-		console.log(response);
 		client.close();
+		return response;
 	} catch (err) {
 		console.log(err);
 	}
