@@ -68,8 +68,6 @@ function sendMessage(event) {
 
   apiai.on('response', (response) => {
 
-  	console.log(response);
-
   	/* Creating the response based off the intentName in the JSON */
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
@@ -77,9 +75,17 @@ function sendMessage(event) {
   			let requested_id = response.result.parameters.vt_building;
 
   			// Calling the query to find the building and return that object from the database
-            var queryResult = buildingQuery(requested_id);
+            let queryResult = buildingQuery(requested_id);
+
+            console.log('QueryResult:');
+            console.log(queryResult);
+            console.log('');
 
             responseText = `Found: ${queryResult.building_name}`;
+
+            console.log('ResponseText:');
+            console.log(responseText);
+            console.log('');
 
   			if (typeof responseText === "undefined") {
   				responseText = "Failed to find building."
@@ -134,6 +140,9 @@ async function buildingQuery(requested_id) {
 		const buildings = db.collection('buildings');
 		const response = (await buildings.findOne({building_id: requested_id}));
 		client.close();
+		console.log('Query Response:');
+		console.log(response);
+		console.log('');
 		return response;
 	} catch (err) {
 		console.log(err);
