@@ -72,10 +72,10 @@ function sendMessage(event) {
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge':
   			
-  			let requested_id = response.result.parameters.vt_building;
+  			let req_id = response.result.parameters.vt_building;
 
   			let query = {
-  			  id: requested_id
+  			  id: req_id
             };
 
   			// Calling the query to find the building and return that object from the database
@@ -89,10 +89,21 @@ function sendMessage(event) {
 
   			break;
 
-  		case 'welcome':
-  			responseText = response.result.fulfillment.speech;
-  			break;
+        case 'buildingAdress':
+            let req_id = response.result.parameters.vt_building;
 
+            let query = {
+              id: req_id
+            };
+
+            let queryResult = await databaseQuery('buildings', query);
+
+            if (queryResult) {
+                responseText = `Mail for ${queryResult.name} can be sent to: \n${queryResult.address}\n\nPlease contact the recipient however to ensure mail specifics though.`;
+            } else {
+                responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
+            }
+            break;
   		default: 
   			responseText = response.result.fulfillment.speech;
   	}
