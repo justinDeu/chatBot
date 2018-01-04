@@ -63,22 +63,22 @@ function sendMessage(event) {
   	sessionId: 'my_chat'
   });
 
-  var responseText; // the variable that will hold the text to send back
+  let responseText; // the variable that will hold the text to send back
 
 
   apiai.on('response', async (response) => {
 
   	/* Creating the response based off the intentName in the JSON */
   	switch (response.result.metadata.intentName) {
-  		case 'buildingAge':
-  			
-  			let req_id = response.result.parameters.vt_building;
+  		case 'buildingAge': {
 
-  			let query = {
-  			  id: req_id
+            let req_id = response.result.parameters.vt_building;
+
+            let query = {
+                id: req_id
             };
 
-  			// Calling the query to find the building and return that object from the database
+            // Calling the query to find the building and return that object from the database
             let queryResult = await databaseQuery('buildings', query);
 
             if (queryResult) {
@@ -86,14 +86,13 @@ function sendMessage(event) {
             } else {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
             }
+        } break;
 
-  			break;
-
-        case 'buildingAdress':
+        case 'buildingAddress': {
             let req_id = response.result.parameters.vt_building;
 
             let query = {
-              id: req_id
+                id: req_id
             };
 
             let queryResult = await databaseQuery('buildings', query);
@@ -103,9 +102,11 @@ function sendMessage(event) {
             } else {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
             }
-            break;
-  		default: 
-  			responseText = response.result.fulfillment.speech;
+        } break;
+
+  		default: {
+            responseText = response.result.fulfillment.speech;
+        }
   	}
 
   	/* Sending the message back to facebook with the produced response */
