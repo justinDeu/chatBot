@@ -78,11 +78,11 @@ function sendMessage(event) {
             let queryResult = await buildingQuery(requested_id);
 
             if (queryResult) {
-                responseText = `Construction of ${queryResult.building_name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
+                responseText = `Construction of ${queryResult.name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
             } else {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
             }
-            
+
   			break;
 
   		case 'welcome':
@@ -130,7 +130,7 @@ async function buildingQuery(requested_id) {
 		const client = await MongoClient.connect(url);
 		const db = client.db(dbName);
 		const buildings = db.collection('buildings');
-		const response = await buildings.findOne({building_id: requested_id});
+		const response = await buildings.findOne({id: requested_id});
 		client.close();
 		return response;
 	} catch (err) {
