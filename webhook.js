@@ -83,7 +83,7 @@ function sendMessage(event) {
                    'data': {
                        'buildingAge': ageInYears(queryResult.start)
                    }
-               }
+               },
                'sessionId': 'my_chat'
             });
 
