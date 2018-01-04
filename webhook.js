@@ -78,13 +78,13 @@ function sendMessage(event) {
             }
             */
             let paramResponse = apiaiApp.textRequest('test',{
-               'event': {
-                   'name': 'customEvent',
-                   'data': {
-                       'buildingAge': ageInYears(queryResult.start)
+               event: {
+                   name: 'customEvent',
+                   data: {
+                       buildingAge: ageInYears(queryResult.start)
                    }
                },
-               'sessionId': 'my_chat'
+               sessionId: 'my_chat'
             });
 
             if (paramResponse) {
