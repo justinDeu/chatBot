@@ -74,8 +74,12 @@ function sendMessage(event) {
   			
   			let requested_id = response.result.parameters.vt_building;
 
+  			let query = {
+  			  id: requested_id
+            };
+
   			// Calling the query to find the building and return that object from the database
-            let queryResult = await buildingQuery(requested_id);
+            let queryResult = await databaseQuery('buildings', query);
 
             if (queryResult) {
                 responseText = `Construction of ${queryResult.name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
@@ -122,15 +126,16 @@ function sendMessage(event) {
 /* Connects to the MongoDB and queries the builidings
 	database to find and return the desired building
 
-	 params: requested_id   the identifier of the desired building
+	 params: query  the query that should be performed
+	         coll   the collection to be looked in
 	 returns: the object that the query finds
 	 */
-async function buildingQuery(requested_id) {
+async function databaseQuery(coll, query) {
 	try {
 		const client = await MongoClient.connect(url);
 		const db = client.db(dbName);
-		const buildings = db.collection('buildings');
-		const response = await buildings.findOne({id: requested_id});
+		const buildings = db.collection(coll);
+		const response = await buildings.findOne(query);
 		client.close();
 		return response;
 	} catch (err) {
