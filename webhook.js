@@ -72,16 +72,10 @@ function sendMessage(event) {
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge': {
 
-            let req_id = response.result.parameters.vt_building;
-
-            let query = {
-                id: req_id
-            };
-
             // Calling the query to find the building and return that object from the database
-            let queryResult = await databaseQuery('buildings', query);
+            let queryResult = await buildingQuery(response.result.parameters.vt_building);
 
-            if (queryResult) {
+            if (queryResult && ageInYears(queryResult.start) !== -1) {
                 responseText = `Construction of ${queryResult.name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
             } else {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
@@ -170,6 +164,16 @@ async function databaseQuery(coll, query) {
 	} catch (err) {
 		console.log(err);
 	}
+}
+
+/*
+    Specifically queries buildings returning the object for the requested id
+
+    params: id  the building id that should be looked for
+    returns: the building object queried
+ */
+function buildingQuery(buildingId) {
+    return databaseQuery('buildings', {id: buildingId});
 }
 
 /*
