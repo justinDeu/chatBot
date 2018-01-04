@@ -77,7 +77,7 @@ function sendMessage(event) {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
             }
             */
-            let paramResponse = apiaiApp.textRequest({
+            let paramResponse = apiaiApp.textRequest('test',{
                'event': {
                    'name': 'customEvent',
                    'data': {
