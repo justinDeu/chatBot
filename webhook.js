@@ -113,21 +113,13 @@ function sendMessage(event) {
 
             let queryResult = await databaseQuery('buildings', query);
 
-            console.log('');
-            console.log('Map Location Results:');
-            console.log(queryResult);
-            console.log("Name: ", queryResult.name);
-            console.log("Map Grid: ", queryResult.mapGrid);
-
             if (queryResult) {
-                //responseText = `${queryResult.name} can be found in cell ${queryResult.mapGrid} on this map:\n\n http://www.maps.vt.edu/PDF/campus-map-highres.pdf`;
-                console.log('gotHere');
-                responseText = 'True'
+                responseText = `${queryResult.name} can be found in cell ${queryResult.mapGrid} on this map:\n\n http://www.maps.vt.edu/PDF/campus-map-highres.pdf`;
             } else {
                 console.log('Here instead');
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`;
             }
-        }
+        } break;
 
   		default: {
             responseText = response.result.fulfillment.speech;
