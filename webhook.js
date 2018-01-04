@@ -98,11 +98,25 @@ function sendMessage(event) {
             let queryResult = await databaseQuery('buildings', query);
 
             if (queryResult) {
-                responseText = `Mail for ${queryResult.name} can be sent to: \n${queryResult.address}\n\nPlease contact the recipient however to ensure mail specifics though.`;
+                responseText = `Mail for ${queryResult.name} can be sent to: \n\n${queryResult.address}\n\nPlease contact the recipient however to ensure mail specifics though.`;
             } else {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
             }
         } break;
+
+        case 'mapLocation': {
+            let req_id = response.result.parameters.vt_building;
+
+            let query = {
+                id: req_id
+            };
+
+            let queryResult = await databaseQuery('buildings', query);
+
+            if (queryResult) {
+                responseText = `${queryResult.name} can be found in cell ${queryResult.mapGrid} on this map:\n\nhttp://www.maps.vt.edu/PDF/campus-map-highres.pdf`
+            }
+        }
 
   		default: {
             responseText = response.result.fulfillment.speech;
