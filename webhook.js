@@ -71,10 +71,26 @@ function sendMessage(event) {
             // Calling the query to find the building and return that object from the database
             let queryResult = await buildingQuery(response.result.parameters.vt_building);
 
-            if (queryResult && ageInYears(queryResult.start) !== -1) {
+            /*if (queryResult && ageInYears(queryResult.start) !== -1) {
                 responseText = `Construction of ${queryResult.name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
             } else {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
+            }
+            */
+            let paramResponse = apiaiApp.textRequest({
+               'event': {
+                   'name': 'customEvent',
+                   'data': {
+                       'buildingAge': ageInYears(queryResult.start)
+                   }
+               }
+               'sessionId': 'my_chat'
+            });
+
+            if (paramResponse) {
+                responseText = paramResponse.result.fulfillment.speech;
+            } else {
+                responseText = "Didn't have a paramResponse";
             }
         } break;
 
