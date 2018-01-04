@@ -1,4 +1,4 @@
-/* The necessary modules to function being declard */
+/* The necessary modules to function being declared */
 const dotenv = require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -6,10 +6,6 @@ const app = express();
 const request = require('request');
 const apiaiApp = require('apiai')(process.env.APIAI_KEY);
 const MongoClient = require('mongodb').MongoClient;
-
-
-// Temporarily declaring global var db for the mongo database 
-var db;
 
 /* Telling the express app to use bodyparser to handle JSON */
 app.use(bodyParser.json());
@@ -111,7 +107,7 @@ function sendMessage(event) {
   	/* Sending the message back to facebook with the produced response */
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
-   	 	qs: {access_token: 'EAAFjH7OUxG4BAI3O0EyaHubKQU455pf0wFUCZCjKIgChAy3KieZCk31ZBR96ZCZB7aNDkfcpuDjh3H9oBGYLY19rsGO6qh0RsdTlB8pfBcYhFTbAOmCYM54Iq2h55Suxg2jDyemdOCSyS5tXS0oZCYmG3rVHHixqXfLaEiv03ZA7VY18GwqJWAn'},
+   	 	qs: {access_token: process.env.ACCESS_TOKEN},
    	 	method: 'POST',
    	 	json: {
   	    	recipient: {id: sender},
@@ -134,7 +130,7 @@ function sendMessage(event) {
 
 }
 
-/* Connects to the MongoDB and queries the builidings
+/* Connects to the MongoDB and queries the buildings
 	database to find and return the desired building
 
 	 params: query  the query that should be performed
@@ -167,7 +163,7 @@ function buildingQuery(buildingId) {
 /*
     Calculates the age of something in years based of the given year
     Returns -1 if the calculation is not correct and the
-    builiding age is negative
+    building age is negative
 
     params: startYear   the year it was started
     return: the age in years
