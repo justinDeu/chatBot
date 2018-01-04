@@ -114,7 +114,9 @@ function sendMessage(event) {
             let queryResult = await databaseQuery('buildings', query);
 
             if (queryResult) {
-                responseText = `${queryResult.name} can be found in cell ${queryResult.mapGrid} on this map:\n\nhttp://www.maps.vt.edu/PDF/campus-map-highres.pdf`
+                responseText = `${queryResult.name} can be found in cell ${queryResult.mapGrid} on this map:\n\n http://www.maps.vt.edu/PDF/campus-map-highres.pdf`;
+            } else {
+                responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`;
             }
         }
 
