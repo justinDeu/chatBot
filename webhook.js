@@ -79,7 +79,7 @@ function sendMessage(event) {
             */
 
             let age = ageInYears(queryResult.start);
-            let paramResponse = await apiaiApp.textRequest('test',{
+            let paramResponse = apiaiApp.textRequest('test', {
                event: {
                    name: 'customEvent',
                    data: {
@@ -101,6 +101,13 @@ function sendMessage(event) {
                 console.log('');
                 responseText = response.result.fulfillment.speech;
             });
+
+            paramResponse.on('error', (error) => {
+                console.log(error);
+            });
+
+            paramResponse.end();
+
 
             /*if (paramResponse) {
                 responseText = paramResponse.result.fulfillment.speech;
