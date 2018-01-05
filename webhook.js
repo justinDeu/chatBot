@@ -77,17 +77,28 @@ function sendMessage(event) {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
             }
             */
+
+            let age = ageInYears(queryResult.start);
             let paramResponse = await apiaiApp.textRequest('test',{
                event: {
                    name: 'customEvent',
                    data: {
-                       buildingAge: ageInYears(queryResult.start)
+                       buildingAge: age
                    }
                },
                sessionId: 'my_chat'
             });
 
+            console.log('');
+            console.log('ParamResponse:');
+            console.log(paramResponse);
+            console.log('');
+
             paramResponse.on('response', (response) => {
+                console.log('');
+                console.log('response inside event handler:');
+                console.log(response);
+                console.log('');
                 responseText = response.result.fulfillment.speech;
             });
 
