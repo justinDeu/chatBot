@@ -77,7 +77,7 @@ function sendMessage(event) {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
             }
             */
-            let paramResponse = apiaiApp.textRequest('test',{
+            let paramResponse = await apiaiApp.textRequest('test',{
                event: {
                    name: 'customEvent',
                    data: {
@@ -87,11 +87,15 @@ function sendMessage(event) {
                sessionId: 'my_chat'
             });
 
-            if (paramResponse) {
+            paramResponse.on('response', (response) => {
+                responseText = response.result.fulfillment.speech;
+            });
+
+            /*if (paramResponse) {
                 responseText = paramResponse.result.fulfillment.speech;
             } else {
                 responseText = "Didn't have a paramResponse";
-            }
+            }*/
         } break;
 
         case 'buildingAddress': {
