@@ -87,26 +87,32 @@ function sendMessage(event) {
                    }
                },
                sessionId: 'my_chat'
-            });
-
-            console.log('');
-            console.log('ParamResponse:');
-            console.log(paramResponse);
-            console.log('');
-
-            paramResponse.on('response', (response) => {
+            })
+            .then(() => {
+                console.log('');
+                console.log('ParamResponse:');
+                console.log(paramResponse);
+                console.log('');})
+            .then((response) => {
                 console.log('');
                 console.log('response inside event handler:');
                 console.log(response);
                 console.log('');
-                responseText = response.result.fulfillment.speech;
+                responseText = response.result.fulfillment.speech;})
+            .catch((error) => {
+                console.log(error);});
+
+            paramResponse.end();
+
+            /*paramResponse.on('response', (response) => {
+
             });
 
             paramResponse.on('error', (error) => {
                 console.log(error);
-            });
+            });*/
 
-            paramResponse.end();
+
 
 
             /*if (paramResponse) {
