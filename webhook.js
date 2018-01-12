@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const request = require('request');
 const apiaiApp = require('apiai')(process.env.APIAI_KEY);
-const MongoClient = require('mongodb').MongoClient;
 const generateResponse = require('./generateResponse.js');
 
 /* Telling the express app to use bodyparser to handle JSON */
@@ -18,26 +17,6 @@ const server = app.listen(process.env.PORT || 3000, () => {
   console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
 
-/*
-Testing the custom import
- */
-generateResponse({
-    result: {
-        metadata: {
-            intentName: "officeContact"
-        },
-        parameters: {
-            vt_building: "TORG"
-        }
-    }
-}).then((response) => {console.log(response)});
-
-
-/* Connecting to the MongoDB database for information */
-const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DBNAME}`;
-const dbName = process.env.MONGO_DBNAME;
-
-
 /* For Facebook Validation */
 app.get('/webhook', (req, res) => {
   if (req.query['hub.mode'] && req.query['hub.verify_token'] === 'tuxedo_cat') {
@@ -48,7 +27,7 @@ app.get('/webhook', (req, res) => {
 });
 
 
-/* Handling all messenges */
+/* Handling all messages */
 app.post('/webhook', (req, res) => {
   console.log(req.body);
   if (req.body.object === 'page') {
@@ -74,100 +53,10 @@ function sendMessage(event) {
   	sessionId: 'my_chat'
   });
 
-  let responseText; // the variable that will hold the text to send back
-
-
   apiai.on('response', async (response) => {
 
-      responseText = await generateResponse(response);
+      let responseText = await generateResponse(response);
 
-  	/*/!* Creating the response based off the intentName in the JSON *!/
-  	switch (response.result.metadata.intentName) {
-  		case 'buildingAge': {
-
-            /!*!// Calling the query to find the building and return that object from the database
-            let queryResult = await buildingQuery(response.result.parameters.vt_building);
-
-            /!*if (queryResult && ageInYears(queryResult.start) !== -1) {
-                responseText = `Construction of ${queryResult.name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
-            } else {
-                responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
-            }
-            *!/
-
-            let age = ageInYears(queryResult.start);
-            let paramResponse = apiaiApp.textRequest('test', {
-               event: {
-                   name: 'customEvent',
-                   data: {
-                       buildingAge: age
-                   }
-               },
-               sessionId: 'my_chat'
-            })
-            .then(() => {
-                console.log('');
-                console.log('ParamResponse:');
-                console.log(paramResponse);
-                console.log('');})
-            .then((response) => {
-                console.log('');
-                console.log('response inside event handler:');
-                console.log(response);
-                console.log('');
-                responseText = response.result.fulfillment.speech;})
-            .catch((error) => {
-                console.log(error);});
-
-            paramResponse.end();
-
-            /!*paramResponse.on('response', (response) => {
-
-            });
-
-            paramResponse.on('error', (error) => {
-                console.log(error);
-            });*!/
-
-
-
-
-            /!*if (paramResponse) {
-                responseText = paramResponse.result.fulfillment.speech;
-            } else {
-                responseText = "Didn't have a paramResponse";
-            }*!/!*!/
-        } break;
-
-        case 'buildingAddress': {
-            let queryResult = await buildingQuery(response.result.parameters.vt_building);
-
-            if (queryResult) {
-                responseText = `Mail for ${queryResult.name} can be sent to: \n\n${queryResult.address}\n\nPlease contact the recipient however to ensure mail specifics though.`;
-            } else {
-                responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
-            }
-        } break;
-
-        case 'mapLocation': {
-            let queryResult = await buildingQuery(response.result.parameters.vt_building);
-
-            if (queryResult) {
-                responseText = `${queryResult.name} can be found in cell ${queryResult.mapGrid} on this map:\n\n http://www.maps.vt.edu/PDF/campus-map-highres.pdf`;
-            } else {
-                console.log('Here instead');
-                responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`;
-            }
-        } break;
-
-        case 'officeContact': {
-
-        } break;
-
-  		default: {
-            responseText = response.result.fulfillment.speech;
-        }
-  	}*/
 
   	/* Sending the message back to facebook with the produced response */
 	request({
@@ -195,51 +84,3 @@ function sendMessage(event) {
 
 }
 
-/* Connects to the MongoDB and queries the buildings
-	database to find and return the desired building
-
-	 params: query  the query that should be performed
-	         coll   the collection to be looked in
-	 returns: the object that the query finds
-	 */
-async function databaseQuery(coll, query) {
-	try {
-		const client = await MongoClient.connect(url);
-		const db = client.db(dbName);
-		const buildings = db.collection(coll);
-		const response = await buildings.findOne(query);
-		client.close();
-		return response;
-	} catch (err) {
-		console.log(err);
-	}
-}
-
-/*
-    Specifically queries buildings returning the object for the requested id
-
-    params: id  the building id that should be looked for
-    returns: the building object queried
- */
-function buildingQuery(buildingId) {
-    return databaseQuery('buildings', {id: buildingId});
-}
-
-/*
-    Calculates the age of something in years based of the given year
-    Returns -1 if the calculation is not correct and the
-    building age is negative
-
-    params: startYear   the year it was started
-    return: the age in years
- */
-function ageInYears(startYear) {
-    const currentYear = new Date().getFullYear();
-
-    if (!Number.isInteger(startYear) || startYear > currentYear) {
-        return -1;
-    } else {
-        return currentYear - startYear;
-    }
-
-}

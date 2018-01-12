@@ -16,49 +16,6 @@ module.exports = async function (apiaiObj) {
                 return `I am sorry. An error occurred and I was unable to find that. Please try again.`;
             }
 
-            /*let age = ageInYears(queryResult.start);
-            let paramResponse = apiaiApp.textRequest('test', {
-                event: {
-                    name: 'customEvent',
-                    data: {
-                        buildingAge: age
-                    }
-                },
-                sessionId: 'my_chat'
-            })
-                .then(() => {
-                    console.log('');
-                    console.log('ParamResponse:');
-                    console.log(paramResponse);
-                    console.log('');})
-                .then((response) => {
-                    console.log('');
-                    console.log('response inside event handler:');
-                    console.log(response);
-                    console.log('');
-                    responseText = response.result.fulfillment.speech;})
-                .catch((error) => {
-                    console.log(error);});
-
-            paramResponse.end();*/
-
-            /*paramResponse.on('response', (response) => {
-
-            });
-
-            paramResponse.on('error', (error) => {
-                console.log(error);
-            });*/
-
-
-
-
-            /*if (paramResponse) {
-                responseText = paramResponse.result.fulfillment.speech;
-            } else {
-                responseText = "Didn't have a paramResponse";
-            }*/
-
         } break;
 
         case 'buildingAddress': {
@@ -90,7 +47,7 @@ module.exports = async function (apiaiObj) {
             return apiaiObj.result.fulfillment.speech;
         }
     }
-}
+};
 
 /* Connects to the MongoDB and queries the buildings
 	database to find and return the desired building
