@@ -55,7 +55,7 @@ function sendMessage(event) {
 
   apiai.on('response', async (response) => {
 
-      let responseText = await generateResponse(response);
+      let responseText = await generateResponse(response, apiai);
 
 
   	/* Sending the message back to facebook with the produced response */

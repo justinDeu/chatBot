@@ -4,17 +4,38 @@ const MongoClient = require('mongodb').MongoClient;
 const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DBNAME}`;
 const dbName = process.env.MONGO_DBNAME;
 
-module.exports = async function (apiaiObj) {
+module.exports = async function (apiaiObj, apiaiClient) {
     switch (apiaiObj.result.metadata.intentName) {
         case 'buildingAge': {
 
             let queryResult = await buildingQuery(apiaiObj.result.parameters.vt_building);
 
-            if (queryResult && ageInYears(queryResult.start) !== -1) {
+           let clientResponse = apiaiClient.post('/query', {
+                event: {
+                    name: "customEvent",
+                    data: {
+                        buildingAge: ageInYears(queryResult.start)
+                    }
+                },
+                sessionId: "myChat",
+                lang: "en"
+            });
+
+           clientResponse.on('response', (res) => {
+               return res.fulfillment.speech;
+           });
+
+            clientResponse.on('error', (error) => {
+                console.log(error);
+            });
+
+            clientResponse.end();
+
+            /*if (queryResult && ageInYears(queryResult.start) !== -1) {
                 return `Construction of ${queryResult.name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
             } else {
                 return `I am sorry. An error occurred and I was unable to find that. Please try again.`;
-            }
+            }*/
 
         } break;
 
