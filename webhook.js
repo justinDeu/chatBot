@@ -6,6 +6,7 @@ const app = express();
 const request = require('request');
 const apiaiApp = require('apiai')(process.env.APIAI_KEY);
 const MongoClient = require('mongodb').MongoClient;
+const generateResponse = require('./generateResponse.js');
 
 /* Telling the express app to use bodyparser to handle JSON */
 app.use(bodyParser.json());
@@ -16,6 +17,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const server = app.listen(process.env.PORT || 3000, () => {
   console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
+
+/*
+Testing the custom import
+ */
+generateResponse({
+    result: {
+        metadata: {
+            intentName: "officeContact"
+        },
+        parameters: {
+            vt_building: "TORG"
+        }
+    }
+}).then((response) => {console.log(response)});
 
 
 /* Connecting to the MongoDB database for information */
@@ -64,19 +79,21 @@ function sendMessage(event) {
 
   apiai.on('response', async (response) => {
 
-  	/* Creating the response based off the intentName in the JSON */
+      responseText = await generateResponse(response);
+
+  	/*/!* Creating the response based off the intentName in the JSON *!/
   	switch (response.result.metadata.intentName) {
   		case 'buildingAge': {
 
-            // Calling the query to find the building and return that object from the database
+            /!*!// Calling the query to find the building and return that object from the database
             let queryResult = await buildingQuery(response.result.parameters.vt_building);
 
-            /*if (queryResult && ageInYears(queryResult.start) !== -1) {
+            /!*if (queryResult && ageInYears(queryResult.start) !== -1) {
                 responseText = `Construction of ${queryResult.name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
             } else {
                 responseText = `I am sorry. An error occurred and I was unable to find that. Please try again.`
             }
-            */
+            *!/
 
             let age = ageInYears(queryResult.start);
             let paramResponse = apiaiApp.textRequest('test', {
@@ -104,22 +121,22 @@ function sendMessage(event) {
 
             paramResponse.end();
 
-            /*paramResponse.on('response', (response) => {
+            /!*paramResponse.on('response', (response) => {
 
             });
 
             paramResponse.on('error', (error) => {
                 console.log(error);
-            });*/
+            });*!/
 
 
 
 
-            /*if (paramResponse) {
+            /!*if (paramResponse) {
                 responseText = paramResponse.result.fulfillment.speech;
             } else {
                 responseText = "Didn't have a paramResponse";
-            }*/
+            }*!/!*!/
         } break;
 
         case 'buildingAddress': {
@@ -143,10 +160,14 @@ function sendMessage(event) {
             }
         } break;
 
+        case 'officeContact': {
+
+        } break;
+
   		default: {
             responseText = response.result.fulfillment.speech;
         }
-  	}
+  	}*/
 
   	/* Sending the message back to facebook with the produced response */
 	request({
