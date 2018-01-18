@@ -10,7 +10,7 @@ module.exports = async function (apiaiObj, apiaiClient) {
 
             let queryResult = await buildingQuery(apiaiObj.result.parameters.vt_building);
 
-           let clientResponse = apiaiClient.post('/query', {
+           /*let clientResponse = apiaiClient.post('/query', {
                 event: {
                     name: "customEvent",
                     data: {
@@ -29,13 +29,13 @@ module.exports = async function (apiaiObj, apiaiClient) {
                 console.log(error);
             });
 
-            clientResponse.end();
+            clientResponse.end();*/
 
-            /*if (queryResult && ageInYears(queryResult.start) !== -1) {
+            if (queryResult && ageInYears(queryResult.start) !== -1) {
                 return `Construction of ${queryResult.name} was started in ${queryResult.start} making the building ${ageInYears(queryResult.start)} years old.`;
             } else {
                 return `I am sorry. An error occurred and I was unable to find that. Please try again.`;
-            }*/
+            }
 
         } break;
 
